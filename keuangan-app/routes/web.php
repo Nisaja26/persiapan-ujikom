@@ -9,6 +9,7 @@ use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReportIndexController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 
 // masuk dahboard harus login dan terverifikasi dulu
 Route::get('/dashboard', [DashboardController::class, 'index'])
@@ -18,6 +19,15 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     // halaman utama
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::middleware(['auth', 'admin'])->group(function () {
+
+    Route::get('/admin/register', [RegisteredUserController::class, 'create'])
+        ->name('admin.register');
+
+    Route::post('/admin/register', [RegisteredUserController::class, 'store'])
+        ->name('admin.register.store');
 });
 
 
