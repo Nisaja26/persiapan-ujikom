@@ -41,8 +41,11 @@ class RegisteredUserController extends Controller
             'password' => $request->password,
             'role' => $request->role,
         ]);
+        
+        return redirect()
+            ->route('dashboard')
+            ->with('success', 'Akun berhasil dibuat. Selamat datang!');
 
-        return redirect()->back()->with('success', 'User berhasil dibuat');
     }
 
 

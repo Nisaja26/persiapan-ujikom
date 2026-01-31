@@ -8,7 +8,7 @@
 
     <!-- boptsrap -->
     <link rel="stylesheet" href="{{ asset('assets/bootstrap/css/bootstrap.min.css') }}">
-    <!-- js -->
+    <!--icon -->
     <link rel="stylesheet" href="{{ asset('assets/fontawesome/css/all.min.css') }}">
 
 
