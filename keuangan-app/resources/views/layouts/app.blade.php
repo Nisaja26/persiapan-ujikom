@@ -4,31 +4,74 @@
 <head>
   <meta charset="UTF-8">
   <title>@yield('title')</title>
+
   <link href="{{ asset('sb-admin2/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
   <link href="{{ asset('sb-admin2/css/sb-admin-2.min.css') }}" rel="stylesheet">
-  
 
+  <!-- CSS Button Back -->
+  <style>
+    .back-btn-fixed {
+      position: fixed;
+      bottom: 16px;
+      left: 16px;
+      z-index: 1050;
 
-  <!-- icon css fontawesome -->
-<link rel="icon" href="{{ asset('sb-admin2/img/favicon-new.png') }}" type="image/png">
+      display: flex;
+      align-items: center;
+      gap: 6px;
 
+      border-radius: 50px;
+      padding: 8px 14px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, .15);
+    }
+
+    @media (max-width: 576px) {
+      .back-btn-fixed {
+        padding: 10px;
+        border-radius: 50%;
+      }
+
+      .back-text {
+        display: none;
+      }
+    }
+  </style>
+
+  @stack('styles')
+
+  <link rel="icon" href="{{ asset('sb-admin2/img/favicon-new.png') }}" type="image/png">
 </head>
+
 
 <body id="page-top">
   <div id="wrapper">
-    <!-- menyisipkan file sidebar -->
+
+    <!-- Sidebar -->
     @include('layouts.sidebar')
+
     <div id="content-wrapper" class="d-flex flex-column">
       <div id="content">
+
+        <!-- Topbar -->
         @include('layouts.topbar')
+
         <div class="container-fluid">
-          <!-- menampilkan isi halaman yang menggunakkan layout ini -->
+
+          {{-- ISI HALAMAN --}}
           @yield('content')
+
+          {{-- 🔙 TOMBOL BACK GLOBAL --}}
+          @if (!request()->routeIs('dashboard', 'login', 'register') && url()->previous() && url()->previous() !== url()->current())
+            <a href="{{ url()->previous() }}" class="btn btn-secondary btn-sm back-btn-fixed"> <i
+          class="fas fa-arrow-left me-1"></i> <span class="back-text">Kembali</span> </a> @endif
+
         </div>
-      
+      </div>
+    </div>
+
   </div>
 
-  <!-- notifikasi action sukses/error -->
+  {{-- FLASH MESSAGE --}}
   @if (session('success'))
     <meta name="flash-success" content="{{ session('success') }}">
   @endif
@@ -37,8 +80,7 @@
     <meta name="flash-error" content="{{ session('error') }}">
   @endif
 
-
-  <!-- notifikasi delete konfirmasi -->
+  {{-- CONFIRM DELETE --}}
   <script>
     function confirmDelete(id) {
       Swal.fire({
@@ -58,54 +100,41 @@
     }
   </script>
 
-<!-- pesan data sukses di tambahkan -->
+  {{-- FLASH NOTIFICATION --}}
   <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    let successMessage = document.querySelector('meta[name="flash-success"]')?.content;
-    let errorMessage   = document.querySelector('meta[name="flash-error"]')?.content;
+    document.addEventListener('DOMContentLoaded', function () {
+      let successMessage = document.querySelector('meta[name="flash-success"]')?.content;
+      let errorMessage = document.querySelector('meta[name="flash-error"]')?.content;
 
-    if (successMessage) {
-      Swal.fire({
-        icon: 'success',
-        title: 'Berhasil',
-        text: successMessage,
-        showConfirmButton: false,
-        timer: 2000
-      });
-    }
+      if (successMessage) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Berhasil',
+          text: successMessage,
+          showConfirmButton: false,
+          timer: 2000
+        });
+      }
 
-    if (errorMessage) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Gagal',
-        text: errorMessage,
-        showConfirmButton: false,
-        timer: 2000
-      });
-    }
-  });
-</script>
+      if (errorMessage) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Gagal',
+          text: errorMessage,
+          showConfirmButton: false,
+          timer: 2000
+        });
+      }
+    });
+  </script>
 
-
-
-
-
-
-  <!-- notifikasi pake npm run dev -->
+  {{-- ASSET --}}
   @vite('resources/js/app.js')
   @stack('scripts')
+
   <script src="{{ asset('sb-admin2/vendor/jquery/jquery.min.js') }}"></script>
   <script src="{{ asset('sb-admin2/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
   <script src="{{ asset('sb-admin2/js/sb-admin-2.min.js') }}"></script>
-
-
-
-
-
-  <!-- grafik berdasarkan kategori yang ada button di halaman transaksi-->
-  <!-- @stack('scripts') -->
-
-
 
 </body>
 

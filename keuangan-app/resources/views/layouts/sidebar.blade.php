@@ -96,9 +96,19 @@
     </a>
   </li>
 
-  @if(auth()->user()->role === 'admin')
+  <!-- @if(auth()->user()->role === 'admin')
     <a href="{{ route('admin.register') }}">Tambah User</a>
+  @endif -->
+
+  @if(auth()->user()->role === 'admin')
+    <li class="nav-item">
+      <a class="nav-link" href="{{ route('admin.register') }}">
+        <i class="fas fa-user-plus text-light"></i>
+        <span class="menu-text">Tambah User</span>
+      </a>
+    </li>
   @endif
+
 
   <!-- Logout -->
   <li class="nav-item">
