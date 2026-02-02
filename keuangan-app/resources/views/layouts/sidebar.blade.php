@@ -75,6 +75,8 @@
     <hr class="sidebar-divider">
   @endif
 
+
+
   {{-- ================= CEO MENU ================= --}}
   @if(auth()->user()->role === 'ceo' || auth()->user()->role == 2)
     <div class="sidebar-heading text-light">Transaksi</div>
@@ -89,25 +91,45 @@
 
   <div class="sidebar-heading text-light">Menu Utama</div>
 
+  <!-- Admin -->
+  {{-- PENGATURAN --}}
+  @if(auth()->user()->role === 'admin')
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSettings" aria-expanded="true"
+        aria-controls="collapseSettings"> {{-- ICON (tidak terpengaruh active) --}}
+        <i class="fas fa-cogs sidebar-icon text-gray-400"></i>{{-- TEXT (aktif hanya di sini) --}} <span
+          class="{{ request()->is('settings*') ? 'text-primary font-weight-bold' : '' }}"> Pengaturan </span> </a>
+        <div id="collapseSettings" class="collapse {{ request()->is('settings*') ? 'show' : '' }}"
+          data-parent="#accordionSidebar">
+
+          <div class="bg-white py-2 collapse-inner rounded">
+
+            <h6 class="collapse-header">Pengaturan Sistem</h6>
+
+            {{-- MENU PROFIL --}}
+            <a class="collapse-item {{ request()->is('settings/profile') ? 'active' : '' }}"
+              href="{{ route('settings.profile') }}">
+              <i class="fas fa-user-cog mr-2 text-info"></i>
+              Profil
+            </a>
+
+            {{-- TAMBAH USER --}}
+            <a class="collapse-item" href="{{ route('admin.register') }}">
+              <i class="fas fa-user-plus mr-2 text-success"></i>
+              Tambah User
+            </a>
+
+          </div>
+        </div>
+    </li>
+  @endif
+
   <li class="nav-item {{ request()->is('/') ? 'active' : '' }}">
     <a class="nav-link" href="{{ url('/') }}">
       <i class="fas fa-fw fa-home text-light"></i>
       <span class="menu-text">Home</span>
     </a>
   </li>
-
-  <!-- @if(auth()->user()->role === 'admin')
-    <a href="{{ route('admin.register') }}">Tambah User</a>
-  @endif -->
-
-  @if(auth()->user()->role === 'admin')
-    <li class="nav-item">
-      <a class="nav-link" href="{{ route('admin.register') }}">
-        <i class="fas fa-user-plus text-light"></i>
-        <span class="menu-text">Tambah User</span>
-      </a>
-    </li>
-  @endif
 
 
   <!-- Logout -->

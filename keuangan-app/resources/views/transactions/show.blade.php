@@ -45,12 +45,14 @@
         </table>
       </div>
 
-      <div class="mt-3 d-flex justify-content-end gap-2">
-        <a href="{{ route('transactions.index') }}" class="btn btn-secondary">
-          <i class="fas fa-arrow-left"></i> Kembali
+      <div class="mt-3 d-flex justify-content-end">
+        <a href="{{ route('transactions.index') }}" class="btn btn-primary btn-sm">
+          <i class="fas fa-arrow-left mr-1"></i>
+          Lihat daftar transaksi
         </a>
-        
       </div>
+
+
     </div>
   </div>
 @endsection

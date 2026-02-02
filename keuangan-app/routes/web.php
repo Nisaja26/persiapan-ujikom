@@ -21,6 +21,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// register with admin
 Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::get('/admin/register', [RegisteredUserController::class, 'create'])
@@ -28,6 +29,22 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::post('/admin/register', [RegisteredUserController::class, 'store'])
         ->name('admin.register.store');
+});
+
+Route::middleware('auth')->prefix('settings')->name('settings.')->group(function () {
+
+    Route::get('/profile', function () {
+        return view('settings.profile');
+    })->name('profile');
+
+    Route::get('/account', function () {
+        return view('settings.account');
+    })->name('account');
+
+    Route::get('/security', function () {
+        return view('settings.security');
+    })->name('security');
+
 });
 
 

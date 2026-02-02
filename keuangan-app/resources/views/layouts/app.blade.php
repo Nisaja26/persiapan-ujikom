@@ -61,7 +61,7 @@
           @yield('content')
 
           {{-- 🔙 TOMBOL BACK GLOBAL --}}
-          @if (!request()->routeIs('dashboard', 'login', 'register') && url()->previous() && url()->previous() !== url()->current())
+          @if (!request()->routeIs('dashboard', 'login',) && url()->previous() && url()->previous() !== url()->current())
             <a href="{{ url()->previous() }}" class="btn btn-secondary btn-sm back-btn-fixed"> <i
           class="fas fa-arrow-left me-1"></i> <span class="back-text">Kembali</span> </a> @endif
 
