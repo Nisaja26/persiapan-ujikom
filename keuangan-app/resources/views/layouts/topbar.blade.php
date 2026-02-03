@@ -14,8 +14,8 @@
   <ul class="navbar-nav align-items-center">
 
     @php
-        $notifications = Auth::user()->unreadNotifications;
-        $user = Auth::user();
+      $notifications = Auth::user()->unreadNotifications;
+      $user = Auth::user();
     @endphp
 
     <!-- Notifikasi -->
@@ -24,7 +24,7 @@
         aria-haspopup="true" aria-expanded="false">
         <i class="fas fa-bell fa-fw text-primary"></i>
         @if($notifications->count() > 0)
-            <span class="badge badge-danger badge-counter">{{ $notifications->count() }}</span>
+          <span class="badge badge-danger badge-counter">{{ $notifications->count() }}</span>
         @endif
       </a>
 
@@ -33,41 +33,43 @@
         <h6 class="dropdown-header bg-primary text-white">Notifikasi</h6>
 
         @forelse($notifications as $notif)
-          <a class="dropdown-item d-flex align-items-center" 
-             href="{{ $notif->data['url'] }}?notif_id={{ $notif->id }}">
-            <div class="mr-3">
-              <div class="icon-circle bg-primary">
-                <i class="fas fa-file-alt text-white"></i>
+            <a class="dropdown-item d-flex align-items-center" href="{{ $notif->data['url'] }}?notif_id={{ $notif->id }}">
+              <div class="mr-3">
+                <div class="icon-circle bg-primary">
+                  <i class="fas fa-file-alt text-white"></i>
+                </div>
               </div>
-            </div>
-            <div>
+              <div>
+              </div>
               <span class="small text-gray-500">{{ $notif->created_at->diffForHumans() }}</span>
               {{ $notif->data['message'] }}
-            </div>
+          </div>
           </a>
         @empty
-          <span class="dropdown-item small text-gray-500">Belum ada notifikasi</span>
-        @endforelse
+        <span class="dropdown-item small text-gray-500">Belum ada notifikasi</span>
+      @endforelse
       </div>
     </li>
 
     <div class="topbar-divider d-none d-sm-block"></div>
 
     <!-- User Info -->
-<li class="nav-item dropdown no-arrow">
-  <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-toggle="dropdown"
-    aria-haspopup="true" aria-expanded="false">
+    <li class="nav-item dropdown no-arrow">
+      <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button"
+        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
-    <!-- Nama User (dipindah ke kiri) -->
-    <span class="mr-2 d-none d-lg-inline text-black-500 small">
-      {{ $user->role ? ($user->role === 'ceo' ? 'CEO' : ucfirst($user->role)) : $user->name }}
-    </span>
+        <!-- Nama User (dipindah ke kiri) -->
+        <span class="mr-2 d-none d-lg-inline text-black-500 small">
+    {{ $user->username }} 
+    ({{ $user->role ? strtoupper($user->role->name) : 'No Role' }})
+</span>
 
-    <!-- Foto Profil -->
-    <img class="img-profile rounded-circle ml-2" 
-         src="{{ $user->photo ? asset('storage/' . $user->photo) : asset('./sb-admin2/img/admin.png') }}" 
-         style="width: 35px; height: 35px; object-fit: cover;">
-  </a>
+
+        <!-- Foto Profil -->
+        <img class="img-profile rounded-circle ml-2"
+          src="{{ $user->photo ? asset('storage/' . $user->photo) : asset('./sb-admin2/img/admin.png') }}"
+          style="width: 35px; height: 35px; object-fit: cover;">
+      </a>
 
       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="userDropdown">
         <a class="dropdown-item" href="{{ url('profile') }}">
