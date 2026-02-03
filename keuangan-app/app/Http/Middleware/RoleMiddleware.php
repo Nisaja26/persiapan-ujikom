@@ -15,19 +15,36 @@ class RoleMiddleware
      * @param  \Closure(\Illuminate\Http\Request)  $next
      * @param  string  $role  // bisa "admin" atau "admin|ceo"
      */
-    public function handle(Request $request, Closure $next, $role)
+
+    public function handle($request, Closure $next, ...$roles)
     {
-        if (!Auth::check()) {
-            return redirect('/login');
-        }
+        $user = auth()->user();
 
-        $roles = explode('|', $role);
+        if (!$user || !$user->role) {
+            abort(403);
 
-        if (!in_array(Auth::user()->role, $roles)) {
-            // Lebih profesional: langsung 403 Forbidden
-            abort(Response::HTTP_FORBIDDEN, 'Akses ditolak!');
+            
+
+        if (!in_array($user->role->name, $roles)) {
+            abort(403);
         }
 
         return $next($request);
     }
+
+    // public function handle(Request $request, Closure $next, $role)
+    // {
+    //     if (!Auth::check()) {
+    //         return redirect('/login');
+    //     }
+
+    //     $roles = explode('|', $role);
+
+    //     if (!in_array(Auth::user()->role, $roles)) {
+    //         // Lebih profesional: langsung 403 Forbidden
+    //         abort(Response::HTTP_FORBIDDEN, 'Akses ditolak!');
+    //     }
+
+    //     return $next($request);
+    // }
 }

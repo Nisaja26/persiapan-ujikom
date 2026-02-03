@@ -15,11 +15,14 @@ class IsAdmin
      */
     public function handle($request, Closure $next)
     {
-        if (!auth()->check() || auth()->user()->role !== 'admin') {
+        $user = auth()->user();
+
+        if (!$user || !$user->role || $user->role->name !== 'admin') {
             abort(403, 'ANDA BUKAN ADMIN');
         }
 
         return $next($request);
     }
+
 
 }

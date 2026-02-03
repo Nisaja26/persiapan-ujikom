@@ -48,10 +48,7 @@ Route::middleware('auth')->prefix('settings')->name('settings.')->group(function
 });
 
 
-///Admin + CEO bisa lihat dashboard
-Route::middleware(['auth', 'role:admin|ceo'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-});
+
 
 
 // Hanya Admin yang bisa CRUD transaksi

@@ -23,7 +23,7 @@
   <hr class="sidebar-divider">
 
   {{-- ================= ADMIN MENU ================= --}}
-  @if(auth()->user()->role === 'admin' || auth()->user()->role == 1)
+  @if(auth()->user()->role && auth()->user()->role->name === 'admin')
     <div class="sidebar-heading text-light">Transaksi</div>
     <li class="nav-item {{ request()->is('transactions*') ? 'active' : '' }}">
       <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTransactionsAdmin"
@@ -78,7 +78,7 @@
 
 
   {{-- ================= CEO MENU ================= --}}
-  @if(auth()->user()->role === 'ceo' || auth()->user()->role == 2)
+  @if(auth()->user()->role && auth()->user()->role->name === 'ceo')
     <div class="sidebar-heading text-light">Transaksi</div>
     <li class="nav-item {{ request()->is('transactions') ? 'active' : '' }}">
       <a class="nav-link" href="{{ route('transactions.index') }}">
@@ -93,7 +93,7 @@
 
   <!-- Admin -->
   {{-- PENGATURAN --}}
-  @if(auth()->user()->role === 'admin')
+  @if(auth()->user()->role && auth()->user()->role->name === 'admin')
     <li class="nav-item">
       <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSettings" aria-expanded="true"
         aria-controls="collapseSettings"> {{-- ICON (tidak terpengaruh active) --}}

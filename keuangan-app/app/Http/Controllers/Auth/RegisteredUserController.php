@@ -4,14 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use App\Models\Role;
 
 class RegisteredUserController extends Controller
 {
@@ -20,33 +16,49 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
+        // hanya admin boleh buka halaman register
+        if (!auth()->check() || auth()->user()->role->name !== 'admin') {
+            abort(403, 'Hanya admin yang boleh membuat akun.');
+        }
+
         return view('auth.register');
     }
 
     /**
-     * Handle an incoming registration request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
+     * Handle registration.
      */
     public function store(Request $request)
     {
+        // hanya admin boleh register user
+        if (!auth()->check() || auth()->user()->role->name !== 'admin') {
+            abort(403, 'Hanya admin yang boleh membuat akun.');
+        }
+
+        // validasi
         $request->validate([
-            'username' => 'required|string|unique:users',
+            'username' => 'required|string|unique:users,username',
             'password' => 'required|confirmed|min:8',
             'role' => 'required|in:admin,ceo,user',
         ]);
 
+        // cari role
+        $role = Role::where('name', $request->role)->first();
+
+        if (!$role) {
+            return back()
+                ->withErrors(['role' => 'Role tidak ditemukan'])
+                ->withInput();
+        }
+
+        // simpan user
         User::create([
             'username' => $request->username,
-            'password' => $request->password,
-            'role' => $request->role,
+            'password' => Hash::make($request->password),
+            'role_id' => $role->id,
         ]);
-        
+
         return redirect()
             ->route('dashboard')
-            ->with('success', 'Akun berhasil dibuat. Selamat datang!');
-
+            ->with('success', 'User berhasil dibuat');
     }
-
-
 }

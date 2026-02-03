@@ -6,61 +6,50 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    /**
-     * Kolom yang bisa diisi (fillable).
-     */
     protected $fillable = [
         'username',
         'password',
-        'role', // admin atau ceo
+        'role_id',
     ];
 
-    /**
-     * Kolom yang disembunyikan saat serialisasi.
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Casting kolom.
-     */
+    // Laravel otomatis hash password
     protected $casts = [
         'password' => 'hashed',
     ];
 
-     public function getAuthIdentifierName()
+    public function getAuthIdentifierName()
     {
         return 'username';
     }
 
     /**
-     * Setter otomatis untuk password (langsung di-hash).
+     * Relasi ke tabel roles
      */
-    public function setPasswordAttribute($value)
+    public function role()
     {
-        if (!empty($value)) {
-            $this->attributes['password'] = Hash::make($value);
-        }
+        return $this->belongsTo(Role::class);
     }
 
     /**
-     * Cek role user.
+     * Helper cek role
      */
     public function isAdmin()
     {
-        return $this->role === 'admin';
+        return $this->role && $this->role->name === 'admin';
     }
 
     public function isCeo()
     {
-        return $this->role === 'ceo';
+        return $this->role && $this->role->name === 'ceo';
     }
 }
