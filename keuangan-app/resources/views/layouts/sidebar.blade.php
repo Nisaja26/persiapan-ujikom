@@ -96,31 +96,38 @@
   @if(auth()->user()->role && auth()->user()->role->name === 'admin')
     <li class="nav-item">
       <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSettings" aria-expanded="true"
-        aria-controls="collapseSettings"> {{-- ICON (tidak terpengaruh active) --}}
-        <i class="fas fa-cogs sidebar-icon text-gray-400"></i>{{-- TEXT (aktif hanya di sini) --}} <span
-          class="{{ request()->is('settings*') ? 'text-primary font-weight-bold' : '' }}"> Pengaturan </span> </a>
-        <div id="collapseSettings" class="collapse {{ request()->is('settings*') ? 'show' : '' }}"
-          data-parent="#accordionSidebar">
+        aria-controls="collapseSettings">
 
-          <div class="bg-white py-2 collapse-inner rounded">
+        {{-- ICON --}}
+        <i class="fas fa-cogs sidebar-icon text-gray-400"></i>
 
-            <h6 class="collapse-header">Pengaturan Sistem</h6>
+        {{-- TEXT --}}
+        <span class="{{ request()->is('profile') ? 'text-primary font-weight-bold' : '' }}">
+          Pengaturan
+        </span>
+      </a>
 
-            {{-- MENU PROFIL --}}
-            <a class="collapse-item {{ request()->is('settings/profile') ? 'active' : '' }}"
-              href="{{ route('settings.profile') }}">
-              <i class="fas fa-user-cog mr-2 text-info"></i>
-              Profil
-            </a>
+      <div id="collapseSettings" class="collapse {{ request()->is('profile') ? 'show' : '' }}"
+        data-parent="#accordionSidebar">
 
-            {{-- TAMBAH USER --}}
-            <a class="collapse-item" href="{{ route('admin.register') }}">
-              <i class="fas fa-user-plus mr-2 text-success"></i>
-              Tambah User
-            </a>
+        <div class="bg-white py-2 collapse-inner rounded">
 
-          </div>
+          <h6 class="collapse-header">Pengaturan Sistem</h6>
+
+          <a class="collapse-item {{ request()->is('profile') ? 'active' : '' }}" href="{{ route('profile.edit') }}">
+            <i class="fas fa-user-cog mr-2 text-info"></i>
+            Profil
+          </a>
+
+
+          {{-- TAMBAH USER --}}
+          <a class="collapse-item" href="{{ route('admin.register') }}">
+            <i class="fas fa-user-plus mr-2 text-success"></i>
+            Tambah User
+          </a>
+
         </div>
+      </div>
     </li>
   @endif
 

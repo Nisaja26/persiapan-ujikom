@@ -18,42 +18,36 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
-        // 🔹 Beda tampilan berdasarkan role
-        if ($user->role === 'ceo') {
-            return view('profile.ceo', ['user' => $user]);
-        }
+       
 
-        // 🔹 Default untuk admin
-        return view('profile.admin', ['user' => $user]);
+        // 🔹 Default untuk profile 
+        return view('profile.aboutme', ['user' => $user]);
     }
 
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(Request $request)
     {
-        $user = $request->user();
-        $user->fill($request->validated());
+        $request->validate([
+            'username' => 'required|string|max:255|unique:users,username,' . auth()->id(),
 
-        // Reset verifikasi email jika diubah
-        if ($user->isDirty('email')) {
-            $user->email_verified_at = null;
-        }
+        ]);
 
-        $user->save();
+        $request->user()->update([
+            'username' => $request->username,
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        ]);
+
+        return back()->with('status', 'profile-updated');
     }
+
 
     /**
      * Delete the user's account.
      */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Request $request)
     {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
-        ]);
-
         $user = $request->user();
 
         Auth::logout();
@@ -63,6 +57,7 @@ class ProfileController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return Redirect::to('/');
+        return redirect('/');
     }
+
 }

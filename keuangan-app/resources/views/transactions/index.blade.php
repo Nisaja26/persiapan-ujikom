@@ -111,7 +111,7 @@
                 <th>Nominal</th>
                 <th>Tanggal</th>
                 <th>Deskripsi</th>
-                @if($role === 'admin')
+                @if(auth()->user()->isAdmin())
                   <th>Action</th>
                 @endif
               </tr>
@@ -124,20 +124,20 @@
                   <td>
                     <!-- jika type namenya pemasukan  -->
                     @if($trx->type->name == 'Pemasukan')
-                    <!-- maka warna text hijau -->
+                      <!-- maka warna text hijau -->
                       <span class="badge badge-success px-2 py-1">
                         <!-- dengan icon panah ke bawah -->
                         <i class="fas fa-arrow-down mr-1"></i> {{ $trx->type->name }}
                       </span>
                       <!-- jika type name pengeluaran -->
                     @elseif($trx->type->name == 'Pengeluaran')
-                    <!-- maka warna text merah -->
+                      <!-- maka warna text merah -->
                       <span class="badge badge-danger px-2 py-1">
                         <!-- ikon tanda panah ke atas -->
                         <i class="fas fa-arrow-up mr-1"></i> {{ $trx->type->name }}
                       </span>
                     @else
-                    <!-- selain itu maka tulisan warna abu-abu tanpa ikon -->
+                      <!-- selain itu maka tulisan warna abu-abu tanpa ikon -->
                       <span class="badge badge-secondary px-2 py-1">
                         <!-- karena type tidak di kenal/null -->
                         {{ $trx->type->name ?? '-' }}
@@ -156,25 +156,25 @@
                   <td>{{ \Carbon\Carbon::parse($trx->tanggal)->format('d M Y') }}</td>
                   <td>{{ $trx->deskripsi ?? '-' }}</td>
 
-                  @if($role === 'admin')
-                    <td>
-                      <a href="{{ route('transactions.edit', $trx->id) }}" class="btn btn-warning btn-sm rounded-circle"
-                        data-bs-toggle="tooltip" title="Edit">
-                        <i class="fas fa-edit"></i>
-                      </a>
+                  
+                    @if(auth()->user()->isAdmin())
+                      <td>
+                        <a href="{{ route('transactions.edit', $trx->id) }}" class="btn btn-warning btn-sm rounded-circle"
+                          data-bs-toggle="tooltip" title="Edit">
+                          <i class="fas fa-edit"></i>
+                        </a>
 
-                      <form id="delete-form-{{ $trx->id }}" action="{{ route('transactions.destroy', $trx->id) }}"
-                        method="POST" class="d-inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="button" onclick="confirmDelete({{ $trx->id }})"
-                          class="btn btn-danger btn-sm rounded-circle" data-bs-toggle="tooltip" title="Hapus">
-                          <i class="fas fa-trash"></i>
-                        </button>
-                      </form>
-                    </td>
-
-                  @endif
+                        <form id="delete-form-{{ $trx->id }}" action="{{ route('transactions.destroy', $trx->id) }}"
+                          method="POST" class="d-inline">
+                          @csrf
+                          @method('DELETE')
+                          <button type="button" onclick="confirmDelete({{ $trx->id }})"
+                            class="btn btn-danger btn-sm rounded-circle" data-bs-toggle="tooltip" title="Hapus">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </form>
+                      </td>
+                    @endif
                 </tr>
               @empty
                 <tr>

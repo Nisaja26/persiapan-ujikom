@@ -60,9 +60,9 @@
 
         <!-- Nama User (dipindah ke kiri) -->
         <span class="mr-2 d-none d-lg-inline text-black-500 small">
-    {{ $user->username }} 
-    ({{ $user->role ? strtoupper($user->role->name) : 'No Role' }})
-</span>
+          {{ $user->username }}
+          ({{ $user->role ? strtoupper($user->role->name) : 'No Role' }})
+        </span>
 
 
         <!-- Foto Profil -->
@@ -74,7 +74,7 @@
       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="userDropdown">
         <a class="dropdown-item" href="{{ url('profile') }}">
           <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-          Profil
+          Profile
         </a>
       </div>
     </li>

@@ -61,7 +61,7 @@
           @yield('content')
 
           {{-- 🔙 TOMBOL BACK GLOBAL --}}
-          @if (!request()->routeIs('dashboard', 'login',) && url()->previous() && url()->previous() !== url()->current())
+          @if (!request()->routeIs('dashboard', 'login', ) && url()->previous() && url()->previous() !== url()->current())
             <a href="{{ url()->previous() }}" class="btn btn-secondary btn-sm back-btn-fixed"> <i
           class="fas fa-arrow-left me-1"></i> <span class="back-text">Kembali</span> </a> @endif
 
@@ -79,6 +79,9 @@
   @if (session('error'))
     <meta name="flash-error" content="{{ session('error') }}">
   @endif
+
+  {{-- SWEETALERT2 --}}
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   {{-- CONFIRM DELETE --}}
   <script>
@@ -127,6 +130,25 @@
       }
     });
   </script>
+
+  {{-- Button eye password --}}
+  <script>
+    function togglePassword(fieldId, btn) {
+      const input = document.getElementById(fieldId);
+      const icon = btn.querySelector('i');
+
+      if (input.type === "password") {
+        input.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+      } else {
+        input.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+      }
+    }
+  </script>
+
 
   {{-- ASSET --}}
   @vite('resources/js/app.js')
