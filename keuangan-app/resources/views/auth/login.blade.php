@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
 
- <!-- boptsrap -->
-    <link rel="stylesheet" href="{{ asset('assets/bootstrap/css/bootstrap.min.css') }}">
-    <!--icon -->
-    <link rel="stylesheet" href="{{ asset('assets/fontawesome/css/all.min.css') }}">
+  <!-- boptsrap -->
+  <link rel="stylesheet" href="{{ asset('assets/bootstrap/css/bootstrap.min.css') }}">
+  <!--icon -->
+  <link rel="stylesheet" href="{{ asset('assets/fontawesome/css/all.min.css') }}">
 
   <style>
     body {
@@ -26,15 +27,18 @@
     .circle {
       position: absolute;
       border-radius: 50%;
-      background: rgba(51,153,255,0.15); /* biru muda transparan */
+      background: rgba(51, 153, 255, 0.15);
+      /* biru muda transparan */
       z-index: 0;
     }
+
     .circle1 {
       width: 350px;
       height: 350px;
       top: -120px;
       left: -120px;
     }
+
     .circle2 {
       width: 300px;
       height: 300px;
@@ -46,7 +50,7 @@
       background: #fff;
       border-radius: 20px;
       padding: 40px 35px;
-      box-shadow: 0px 8px 20px rgba(0,0,0,0.08);
+      box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.08);
       width: 100%;
       max-width: 420px;
       text-align: center;
@@ -86,7 +90,7 @@
 
     .form-control:focus {
       border-color: #3399ff;
-      box-shadow: 0 0 6px rgba(51,153,255,0.3);
+      box-shadow: 0 0 6px rgba(51, 153, 255, 0.3);
     }
 
     .btn-login {
@@ -108,6 +112,7 @@
         opacity: 0;
         transform: translateY(40px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
@@ -115,6 +120,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <!-- Dekorasi lingkaran -->
@@ -140,12 +146,21 @@
 
       <!-- Password -->
       <div class="mb-3 text-start">
-        <label for="password" class="form-label">Password</label>
-        <input type="password" class="form-control" id="password" name="password" required>
+        <label class="form-label">Password</label>
+        <div class="input-group">
+          <input type="password" id="password" name="password" class="form-control" required>
+
+          <button type="button" class="btn btn-outline-secondary" onclick="togglePassword('password', this)">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
         @error('password')
           <small class="text-danger">{{ $message }}</small>
         @enderror
       </div>
+
+
+
 
       <!-- Tombol -->
       <div class="d-grid">
@@ -154,5 +169,25 @@
     </form>
   </div>
 
+  <!-- button eye password -->
+  <script>
+    function togglePassword(fieldId, btn) {
+      const input = document.getElementById(fieldId);
+      const icon = btn.querySelector('i');
+
+      if (input.type === "password") {
+        input.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+      } else {
+        input.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+      }
+    }
+  </script>
+
+
 </body>
+
 </html>
