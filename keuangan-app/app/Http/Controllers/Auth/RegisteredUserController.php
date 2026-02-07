@@ -21,7 +21,8 @@ class RegisteredUserController extends Controller
             abort(403, 'Hanya admin yang boleh membuat akun.');
         }
 
-        return view('auth.register');
+        $roles = Role::all();
+        return view('auth.register', compact('roles'));
     }
 
     /**

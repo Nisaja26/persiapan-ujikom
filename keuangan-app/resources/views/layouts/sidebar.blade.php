@@ -93,43 +93,69 @@
 
   <!-- Admin -->
   {{-- PENGATURAN --}}
-  @if(auth()->user()->role && auth()->user()->role->name === 'admin')
-    <li class="nav-item">
-      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSettings" aria-expanded="true"
-        aria-controls="collapseSettings">
+{{-- PENGATURAN --}}
+@if(auth()->user()->role && auth()->user()->role->name === 'admin')
+<li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse"
+       data-target="#collapseSettings">
 
-        {{-- ICON --}}
         <i class="fas fa-cogs sidebar-icon text-gray-400"></i>
+        <span>Pengaturan</span>
+    </a>
 
-        {{-- TEXT --}}
-        <span class="{{ request()->is('profile') ? 'text-primary font-weight-bold' : '' }}">
-          Pengaturan
-        </span>
-      </a>
-
-      <div id="collapseSettings" class="collapse {{ request()->is('profile') ? 'show' : '' }}"
-        data-parent="#accordionSidebar">
+    <div id="collapseSettings" class="collapse"
+         data-parent="#accordionSidebar">
 
         <div class="bg-white py-2 collapse-inner rounded">
+            <h6 class="collapse-header">Pengaturan Sistem</h6>
 
-          <h6 class="collapse-header">Pengaturan Sistem</h6>
+            {{-- SUB MENU USER --}}
+            <a class="collapse-item collapsed" href="#"
+               data-toggle="collapse"
+               data-target="#collapseUserSetting">
+                <i class="fas fa-users mr-2 text-primary"></i>
+                Manajemen User
+            </a>
 
-          <a class="collapse-item {{ request()->is('profile') ? 'active' : '' }}" href="{{ route('profile.edit') }}">
-            <i class="fas fa-user-cog mr-2 text-info"></i>
-            Profil
-          </a>
+            <div id="collapseUserSetting" class="collapse pl-3">
+
+                {{-- DAFTAR USER --}}
+                <a class="collapse-item {{ request()->is('users*') ? 'active' : '' }}"
+                   href="{{ route('users.index') }}">
+                    <i class="fas fa-list mr-2 text-secondary"></i>
+                    Daftar User
+                </a>
+
+                {{-- TAMBAH USER --}}
+                <a class="collapse-item"
+                   href="{{ route('admin.register') }}">
+                    <i class="fas fa-user-plus mr-2 text-success"></i>
+                    Tambah User
+                </a>
+
+                {{-- ROLES --}}
+                <a class="collapse-item {{ request()->is('roles') ? 'active' : '' }}"
+                   href="{{ route('roles.index') }}">
+                    <i class="fas fa-user-shield mr-2 text-primary"></i>
+                    Roles
+                </a>
+
+            </div>
 
 
-          {{-- TAMBAH USER --}}
-          <a class="collapse-item" href="{{ route('admin.register') }}">
-            <i class="fas fa-user-plus mr-2 text-success"></i>
-            Tambah User
-          </a>
+            {{-- PROFIL --}}
+                <a class="collapse-item {{ request()->is('profile') ? 'active' : '' }}"
+                   href="{{ route('profile.edit') }}">
+                    <i class="fas fa-user-cog mr-2 text-info"></i>
+                    Profil
+                </a>
 
         </div>
-      </div>
-    </li>
-  @endif
+    </div>
+</li>
+@endif
+
+
 
   <li class="nav-item {{ request()->is('/') ? 'active' : '' }}">
     <a class="nav-link" href="{{ url('/') }}">

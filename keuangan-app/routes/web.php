@@ -10,6 +10,8 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReportIndexController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\RoleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -104,6 +106,28 @@ Route::middleware('auth')->group(function () {
     Route::get('/report/generate', [ReportController::class, 'generate'])->name('report.generate');
     Route::get('/report/transactions', [ReportIndexController::class, 'generate'])
         ->name('report.index.generate');
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| Users (Admin Only)
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Roles (Admin Only)
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
+    Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
+    Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('roles.destroy');
 });
 
 /*

@@ -66,13 +66,18 @@
     </div>
 @endif
 
-{{-- Tooltip Bootstrap --}}
-@push('scripts')
-<script>
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl)
-    })
-</script>
-@endpush
+{{-- Blade view --}}
+    @push('scripts')
+
+    {{-- Tooltip Bootstrap --}}
+        <script>
+            // cari semua elemet toolip
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            // aktifkan tolltip di semua element
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            })
+        </script>
+    @endpush
+
 @endsection
