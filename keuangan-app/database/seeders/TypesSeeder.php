@@ -10,8 +10,8 @@ class TypesSeeder extends Seeder
     public function run(): void
     {
         $types = [
-            ['name' => 'pemasukan'],
-            ['name' => 'pengeluaran'],
+            ['name' => 'Pemasukan'],
+            ['name' => 'Pengeluaran'],
         ];
 
         foreach ($types as $type) {
