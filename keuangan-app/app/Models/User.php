@@ -43,12 +43,9 @@ class User extends Authenticatable
     // tulisan di halaman profil
     public function getRoleLabelAttribute()
     {
-        return match ($this->role) {
-            'admin', 1 => 'Admin',
-            'ceo' => 'CEO',
-            default => ucfirst($this->role),
-        };
+        return $this->role ? ucfirst($this->role->name) : '-';
     }
+
 
 
     /**

@@ -39,24 +39,17 @@ class RegisteredUserController extends Controller
         $request->validate([
             'username' => 'required|string|unique:users,username',
             'password' => 'required|confirmed|min:8',
-            'role' => 'required|in:admin,ceo,user',
+            'role_id' => 'required|exists:roles,id',
         ]);
 
-        // cari role
-        $role = Role::where('name', $request->role)->first();
 
-        if (!$role) {
-            return back()
-                ->withErrors(['role' => 'Role tidak ditemukan'])
-                ->withInput();
-        }
 
-        // simpan user
         User::create([
             'username' => $request->username,
             'password' => Hash::make($request->password),
-            'role_id' => $role->id,
+            'role_id' => $request->role_id,
         ]);
+
 
         return redirect()
             ->route('dashboard')
