@@ -65,7 +65,12 @@ Route::middleware('auth')->group(function () {
     Route::resource('types', TypeController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('sub-categories', SubCategoryController::class);
+
 });
+
+Route::get('/get-subcategories/{id}', 
+    [SubCategoryController::class, 'getByCategory']
+);
 
 /*
 |--------------------------------------------------------------------------

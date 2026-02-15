@@ -5,17 +5,21 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Role;
 
 class UsersSeeder extends Seeder
 {
     public function run(): void
     {
+        $adminRole = Role::where('name', 'admin')->first();
+        $ceoRole   = Role::where('name', 'ceo')->first();
+
         // ADMIN
         User::firstOrCreate(
             ['username' => 'admin'],
             [
-                'password' => Hash::make('admin123'),
-                'role' => 'admin',
+                'password' => Hash::make('password'),
+                'role_id' => $adminRole->id,
             ]
         );
 
@@ -24,7 +28,7 @@ class UsersSeeder extends Seeder
             ['username' => 'ceo'],
             [
                 'password' => Hash::make('ceo123'),
-                'role' => 'ceo',
+                'role_id' => $ceoRole->id,
             ]
         );
     }

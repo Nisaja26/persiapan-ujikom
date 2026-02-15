@@ -12,91 +12,92 @@ use Illuminate\Http\Request;
 
 class TransactionController extends Controller
 {
-   public function index()
-{
-    //tampilkan data dengan relasi urutkan dta terbaru 
-    $query = Transaction::with(['type', 'category', 'subCategory'])->latest();
+    public function index()
+    {
+        //tampilkan data dengan relasi urutkan dta terbaru 
+        $query = Transaction::with(['type', 'category', 'subCategory'])->latest();
 
-    // $histories = TransactionHistory::where('transaction_id', $id)
-    // ->orderBy('created_at', 'desc')
-    // ->get();
+        // $histories = TransactionHistory::where('transaction_id', $id)
+        // ->orderBy('created_at', 'desc')
+        // ->get();
 
-    // 🔹 Filter berdasarkan bulan
-    if (request()->filled('month')) {
-        $query->whereMonth('tanggal', request('month'));
+        // 🔹 Filter berdasarkan bulan
+        if (request()->filled('month')) {
+            $query->whereMonth('tanggal', request('month'));
+        }
+
+        // 🔹 Filter berdasarkan tahun
+        if (request()->filled('year')) {
+            $query->whereYear('tanggal', request('year'));
+        }
+
+        // 🔹 Filter berdasarkan tipe (Pemasukan / Pengeluaran)
+        if (request()->filled('type_id')) {
+            $query->where('type_id', request('type_id'));
+        }
+
+        // Ambil hasil filter (untuk perhitungan)
+        $filteredQuery = clone $query;
+
+        /**
+         * =============================
+         * Perhitungan Total
+         * =============================
+         */
+        // Cari data di tabel types (melalui model Type) yang kolom name-nya bernilai 'Pemasukan', lalu ambil nilai dari kolom id
+        $pemasukanId = Type::where('name', 'Pemasukan')->value('id');
+        $pengeluaranId = Type::where('name', 'Pengeluaran')->value('id');
+
+        $totalPemasukan = $pemasukanId
+            ? (clone $filteredQuery)->where('type_id', $pemasukanId)->sum('amount')
+            : 0;
+
+        $totalPengeluaran = $pengeluaranId
+            ? (clone $filteredQuery)->where('type_id', $pengeluaranId)->sum('amount')
+            : 0;
+
+        // Hitung saldo akhir
+        $saldo = $totalPemasukan - $totalPengeluaran;
+
+        /**
+         * =============================
+         * Untuk tampilan
+         * =============================
+         */
+        $years = Transaction::selectRaw('YEAR(tanggal) as year')
+            ->groupBy('year')
+            ->orderBy('year', 'desc')
+            ->pluck('year');
+
+        $monthlySums = Transaction::selectRaw('YEAR(tanggal) as year, MONTH(tanggal) as month, SUM(amount) as total')
+            ->groupBy('year', 'month')
+            ->orderBy('year', 'desc')
+            ->orderBy('month', 'desc')
+            ->get();
+
+       $role = auth()->user()->role->name;
+
+
+        // 🔹 Tambahkan ini — ambil data untuk dropdown filter
+        $types = Type::all();
+        $categories = Category::all();
+
+        // ✅ Pagination + simpan query filter
+        $transactions = $query->paginate(8)->appends(request()->all());
+
+        // 🔹 Kirim semua data ke view
+        return view('transactions.index', compact(
+            'transactions',
+            'totalPemasukan',
+            'totalPengeluaran',
+            'saldo',
+            'role',
+            'monthlySums',
+            'years',
+            'types',
+            'categories'
+        ));
     }
-
-    // 🔹 Filter berdasarkan tahun
-    if (request()->filled('year')) {
-        $query->whereYear('tanggal', request('year'));
-    }
-
-    // 🔹 Filter berdasarkan tipe (Pemasukan / Pengeluaran)
-    if (request()->filled('type_id')) {
-        $query->where('type_id', request('type_id'));
-    }
-
-    // Ambil hasil filter (untuk perhitungan)
-    $filteredQuery = clone $query;
-
-    /**
-     * =============================
-     * Perhitungan Total
-     * =============================
-     */
-    // Cari data di tabel types (melalui model Type) yang kolom name-nya bernilai 'Pemasukan', lalu ambil nilai dari kolom id
-    $pemasukanId = Type::where('name', 'Pemasukan')->value('id');
-    $pengeluaranId = Type::where('name', 'Pengeluaran')->value('id');
-
-    $totalPemasukan = $pemasukanId
-        ? (clone $filteredQuery)->where('type_id', $pemasukanId)->sum('amount')
-        : 0;
-
-    $totalPengeluaran = $pengeluaranId
-        ? (clone $filteredQuery)->where('type_id', $pengeluaranId)->sum('amount')
-        : 0;
-
-    // Hitung saldo akhir
-    $saldo = $totalPemasukan - $totalPengeluaran;
-
-    /**
-     * =============================
-     * Untuk tampilan
-     * =============================
-     */
-    $years = Transaction::selectRaw('YEAR(tanggal) as year')
-        ->groupBy('year')
-        ->orderBy('year', 'desc')
-        ->pluck('year');
-
-    $monthlySums = Transaction::selectRaw('YEAR(tanggal) as year, MONTH(tanggal) as month, SUM(amount) as total')
-        ->groupBy('year', 'month')
-        ->orderBy('year', 'desc')
-        ->orderBy('month', 'desc')
-        ->get();
-
-    $role = auth()->user()->role;
-
-    // 🔹 Tambahkan ini — ambil data untuk dropdown filter
-    $types = Type::all();
-    $categories = Category::all();
-
-     // ✅ Pagination + simpan query filter
-    $transactions = $query->paginate(8)->appends(request()->all());
-
-    // 🔹 Kirim semua data ke view
-    return view('transactions.index', compact(
-        'transactions',
-        'totalPemasukan',
-        'totalPengeluaran',
-        'saldo',
-        'role',
-        'monthlySums',
-        'years',
-        'types',
-        'categories'
-    ));
-}
 
 
     public function create()
@@ -127,7 +128,11 @@ class TransactionController extends Controller
         $transaction = Transaction::create($request->all());
 
         // 🔔 Kirim notifikasi ke CEO & Admin
-        $users = User::whereIn('role', ['CEO', 'Admin'])->get();
+        $users = User::whereHas('role', function ($q) {
+            $q->whereIn('name', ['CEO', 'Admin']);
+        })->get();
+
+
         // cari user yang rolenya di daftarkan disini
 
         // Ulangi proses ini untuk SETIAP user yang ditemukan

@@ -178,7 +178,7 @@
                 </tr>
               @empty
                 <tr>
-                  <td colspan="{{ $role === 'admin' ? 8 : 7 }}" class="text-center text-muted py-4">
+                  <td colspan="{{ auth()->user()->isAdmin() ? 8 : 7 }}">
                     <i class="fas fa-info-circle mr-1"></i> Data transaksi belum ada
                   </td>
                 </tr>

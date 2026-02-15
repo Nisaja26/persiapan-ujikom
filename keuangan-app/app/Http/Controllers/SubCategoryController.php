@@ -67,4 +67,5 @@ class SubCategoryController extends Controller
     $subCategories = SubCategory::where('category_id', $category_id)->get();
     return response()->json($subCategories);
 }
+
 }
