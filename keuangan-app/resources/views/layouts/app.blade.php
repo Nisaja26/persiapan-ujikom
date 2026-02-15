@@ -61,7 +61,7 @@
           @yield('content')
 
           {{-- 🔙 TOMBOL BACK GLOBAL --}}
-          @if (!request()->routeIs('dashboard', 'login', ) && url()->previous() && url()->previous() !== url()->current())
+          @if (!request()->routeIs('dashboard', 'login' ) && url()->previous() && url()->previous() !== url()->current())
             <a href="{{ url()->previous() }}" class="btn btn-secondary btn-sm back-btn-fixed"> <i
           class="fas fa-arrow-left me-1"></i> <span class="back-text">Kembali</span> </a> @endif
 
@@ -151,12 +151,12 @@
 
 
   {{-- ASSET --}}
-  @vite('resources/js/app.js')
-  @stack('scripts')
-
   <script src="{{ asset('sb-admin2/vendor/jquery/jquery.min.js') }}"></script>
   <script src="{{ asset('sb-admin2/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
   <script src="{{ asset('sb-admin2/js/sb-admin-2.min.js') }}"></script>
+
+  @stack('scripts')
+
 
 </body>
 

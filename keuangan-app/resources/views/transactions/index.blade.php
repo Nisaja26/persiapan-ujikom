@@ -49,7 +49,7 @@
             {{-- 🔹 Filter jenis transaksi --}}
             <select name="type_id" class="form-control form-control-sm mr-2 shadow-sm">
               <option value="">Semua Tipe</option>
-              @foreach(\App\Models\Type::all() as $type)
+              @foreach($types as $type)
                 <option value="{{ $type->id }}" {{ request('type_id') == $type->id ? 'selected' : '' }}>
                   {{ $type->name }}
                 </option>
@@ -156,30 +156,30 @@
                   <td>{{ \Carbon\Carbon::parse($trx->tanggal)->format('d M Y') }}</td>
                   <td>{{ $trx->deskripsi ?? '-' }}</td>
 
-                  
-                    @if(auth()->user()->isAdmin())
-                      <td>
-                        <a href="{{ route('transactions.edit', $trx->id) }}" class="btn btn-warning btn-sm rounded-circle"
-                          data-bs-toggle="tooltip" title="Edit">
-                          <i class="fas fa-edit"></i>
-                        </a>
 
-                        <form id="delete-form-{{ $trx->id }}" action="{{ route('transactions.destroy', $trx->id) }}"
-                          method="POST" class="d-inline">
-                          @csrf
-                          @method('DELETE')
-                          <button type="button" onclick="confirmDelete({{ $trx->id }})"
-                            class="btn btn-danger btn-sm rounded-circle" data-bs-toggle="tooltip" title="Hapus">
-                            <i class="fas fa-trash"></i>
-                          </button>
-                        </form>
-                      </td>
-                    @endif
+                  @if(auth()->user()->isAdmin())
+                    <td>
+                      <a href="{{ route('transactions.edit', $trx->id) }}" class="btn btn-warning btn-sm rounded-circle"
+                        data-toggle="tooltip" title="Edit">
+                        <i class="fas fa-edit"></i>
+                      </a>
+
+                      <form id="delete-form-{{ $trx->id }}" action="{{ route('transactions.destroy', $trx->id) }}"
+                        method="POST" class="d-inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button" onclick="confirmDelete({{ $trx->id }})"
+                          class="btn btn-danger btn-sm rounded-circle" data-bs-toggle="tooltip" title="Hapus">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </form>
+                    </td>
+                  @endif
                 </tr>
               @empty
                 <tr>
-                  <td colspan="{{ auth()->user()->isAdmin() ? 8 : 7 }}">
-                    <i class="fas fa-info-circle mr-1"></i> Data transaksi belum ada
+                  <td colspan="{{ auth()->user()->isAdmin() ? 8 : 7 }}" class="text-center text-muted py-4">
+                    </i> Data transaksi belum ada
                   </td>
                 </tr>
               @endforelse
@@ -194,27 +194,24 @@
       </div>
     </div>
   </div>
-  </div>
 @endsection
 
 @push('scripts')
-  <script>
-    // Saat tombol "Generate Report" diklik
-    document.getElementById('generateReportBtn').addEventListener('click', function (e) {
-      e.preventDefault();
+<script>
+document.addEventListener('DOMContentLoaded', function () {
 
-      // Ambil form filter
-      const form = document.getElementById('filterForm');
-      if (!form) {
-        alert('Form filter tidak ditemukan di halaman.');
-        return;
-      }
+    const btn = document.getElementById('generateReportBtn');
+    const form = document.getElementById('filterForm');
 
-      // Buat query string dari input form
-      const params = new URLSearchParams(new FormData(form)).toString();
+    if (btn && form) {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
 
-      // Buka halaman generate report di tab baru dengan filter yang sama
-      window.open(`{{ route('report.index.generate') }}?${params}`, '_blank');
-    });
-  </script>
+            const params = new URLSearchParams(new FormData(form)).toString();
+            window.open(`{{ route('report.index.generate') }}?${params}`, '_blank');
+        });
+    }
+
+});
+</script>
 @endpush

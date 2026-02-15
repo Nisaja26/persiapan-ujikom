@@ -33,21 +33,29 @@
         <h6 class="dropdown-header bg-primary text-white">Notifikasi</h6>
 
         @forelse($notifications as $notif)
-            <a class="dropdown-item d-flex align-items-center" href="{{ $notif->data['url'] }}?notif_id={{ $notif->id }}">
-              <div class="mr-3">
-                <div class="icon-circle bg-primary">
-                  <i class="fas fa-file-alt text-white"></i>
-                </div>
+          <a class="dropdown-item d-flex align-items-center" href="{{ $notif->data['url'] }}?notif_id={{ $notif->id }}">
+
+            <div class="mr-3">
+              <div class="icon-circle bg-primary">
+                <i class="fas fa-file-alt text-white"></i>
               </div>
-              <div>
+            </div>
+
+            <div>
+              <div class="small text-gray-500">
+                {{ $notif->created_at->diffForHumans() }}
               </div>
-              <span class="small text-gray-500">{{ $notif->created_at->diffForHumans() }}</span>
-              {{ $notif->data['message'] }}
-          </div>
+              <span class="font-weight-bold">
+                {{ $notif->data['message'] }}
+              </span>
+            </div>
+
           </a>
         @empty
-        <span class="dropdown-item small text-gray-500">Belum ada notifikasi</span>
-      @endforelse
+          <span class="dropdown-item small text-gray-500">
+            Belum ada notifikasi
+          </span>
+        @endforelse
       </div>
     </li>
 

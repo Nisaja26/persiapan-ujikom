@@ -75,7 +75,7 @@ class TransactionController extends Controller
             ->orderBy('month', 'desc')
             ->get();
 
-       $role = auth()->user()->role->name;
+        $role = auth()->user()->role->name;
 
 
         // 🔹 Tambahkan ini — ambil data untuk dropdown filter
@@ -125,7 +125,8 @@ class TransactionController extends Controller
         // kalau error redirect ke error massage
 
         // Simpan transaksi baru
-        $transaction = Transaction::create($request->all());
+         $transaction = Transaction::create($request->all());
+
 
         // 🔔 Kirim notifikasi ke CEO & Admin
         $users = User::whereHas('role', function ($q) {
@@ -178,12 +179,12 @@ class TransactionController extends Controller
         return redirect()->route('transactions.index')->with('success', 'Transaction updated successfully.');
     }
 
-    public function destroy($id)
+    public function destroy(Transaction $transaction)
     {
-        // delete data transaksi
-        $transaction = Transaction::findOrFail($id);
         $transaction->delete();
-        return redirect()->route('transactions.index')->with('success', 'Transaction deleted successfully.');
+        return redirect()->route('transactions.index')
+            ->with('success', 'Transaction deleted successfully.');
     }
+
 
 }
