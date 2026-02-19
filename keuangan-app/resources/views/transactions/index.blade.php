@@ -190,6 +190,8 @@
             {{ $transactions->links() }}
           </div>
 
+
+
         </div>
       </div>
     </div>
@@ -197,21 +199,21 @@
 @endsection
 
 @push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function () {
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
 
-    const btn = document.getElementById('generateReportBtn');
-    const form = document.getElementById('filterForm');
+      const btn = document.getElementById('generateReportBtn');
+      const form = document.getElementById('filterForm');
 
-    if (btn && form) {
+      if (btn && form) {
         btn.addEventListener('click', function (e) {
-            e.preventDefault();
+          e.preventDefault();
 
-            const params = new URLSearchParams(new FormData(form)).toString();
-            window.open(`{{ route('report.index.generate') }}?${params}`, '_blank');
+          const params = new URLSearchParams(new FormData(form)).toString();
+          window.open(`{{ route('report.index.generate') }}?${params}`, '_blank');
         });
-    }
+      }
 
-});
-</script>
+    });
+  </script>
 @endpush

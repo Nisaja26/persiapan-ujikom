@@ -93,67 +93,75 @@
 
   <!-- Admin -->
   {{-- PENGATURAN --}}
-{{-- PENGATURAN --}}
-@if(auth()->user()->role && auth()->user()->role->name === 'admin')
-<li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse"
-       data-target="#collapseSettings">
+  {{-- PENGATURAN --}}
+  @if(auth()->user()->role && auth()->user()->role->name === 'admin')
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSettings">
 
         <i class="fas fa-cogs sidebar-icon text-gray-400"></i>
         <span>Pengaturan</span>
-    </a>
+      </a>
 
-    <div id="collapseSettings" class="collapse"
-         data-parent="#accordionSidebar">
+      <div id="collapseSettings" class="collapse" data-parent="#accordionSidebar">
 
         <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Pengaturan Sistem</h6>
+          <h6 class="collapse-header">Pengaturan Sistem</h6>
 
-            {{-- SUB MENU USER --}}
-            <a class="collapse-item collapsed" href="#"
-               data-toggle="collapse"
-               data-target="#collapseUserSetting">
-                <i class="fas fa-users mr-2 text-primary"></i>
-                Manajemen User
+          {{-- SUB MENU USER --}}
+          <a class="collapse-item collapsed" href="#" data-toggle="collapse" data-target="#collapseUserSetting">
+            <i class="fas fa-users mr-2 text-primary"></i>
+            Manajemen User
+          </a>
+
+          <div id="collapseUserSetting" class="collapse pl-3">
+
+            {{-- DAFTAR USER --}}
+            <a class="collapse-item {{ request()->is('users*') ? 'active' : '' }}" href="{{ route('users.index') }}">
+              <i class="fas fa-list mr-2 text-secondary"></i>
+              Daftar User
             </a>
 
-            <div id="collapseUserSetting" class="collapse pl-3">
+            {{-- TAMBAH USER --}}
+            <a class="collapse-item" href="{{ route('admin.register') }}">
+              <i class="fas fa-user-plus mr-2 text-success"></i>
+              Tambah User
+            </a>
 
-                {{-- DAFTAR USER --}}
-                <a class="collapse-item {{ request()->is('users*') ? 'active' : '' }}"
-                   href="{{ route('users.index') }}">
-                    <i class="fas fa-list mr-2 text-secondary"></i>
-                    Daftar User
-                </a>
+            {{-- ROLES --}}
+            <a class="collapse-item {{ request()->is('roles') ? 'active' : '' }}" href="{{ route('roles.index') }}">
+              <i class="fas fa-user-shield mr-2 text-primary"></i>
+              Roles
+            </a>
 
-                {{-- TAMBAH USER --}}
-                <a class="collapse-item"
-                   href="{{ route('admin.register') }}">
-                    <i class="fas fa-user-plus mr-2 text-success"></i>
-                    Tambah User
-                </a>
+          </div>
 
-                {{-- ROLES --}}
-                <a class="collapse-item {{ request()->is('roles') ? 'active' : '' }}"
-                   href="{{ route('roles.index') }}">
-                    <i class="fas fa-user-shield mr-2 text-primary"></i>
-                    Roles
-                </a>
+         
+          {{-- HISTORY --}}
+          <a class="collapse-item d-flex align-items-center justify-content-between 
+   {{ request()->routeIs('transactions.history') ? 'active font-weight-bold text-primary' : '' }}"
+   href="{{ route('transactions.history') }}">
 
-            </div>
+    <span>
+        <i class="fas fa-history mr-2 text-warning"></i>
+        History delete
+    </span>
+
+    <span class="badge badge-danger badge-pill">
+        {{ \App\Models\Transaction::onlyTrashed()->count() }}
+    </span>
+</a>
 
 
-            {{-- PROFIL --}}
-                <a class="collapse-item {{ request()->is('profile') ? 'active' : '' }}"
-                   href="{{ route('profile.edit') }}">
-                    <i class="fas fa-user-cog mr-2 text-info"></i>
-                    Profil
-                </a>
+          {{-- PROFIL --}}
+          <a class="collapse-item {{ request()->is('profile') ? 'active' : '' }}" href="{{ route('profile.edit') }}">
+            <i class="fas fa-user-cog mr-2 text-info"></i>
+            Profil
+          </a>
 
         </div>
-    </div>
-</li>
-@endif
+      </div>
+    </li>
+  @endif
 
 
 

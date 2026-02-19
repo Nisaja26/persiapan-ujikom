@@ -125,7 +125,7 @@ class TransactionController extends Controller
         // kalau error redirect ke error massage
 
         // Simpan transaksi baru
-         $transaction = Transaction::create($request->all());
+        $transaction = Transaction::create($request->all());
 
 
         // 🔔 Kirim notifikasi ke CEO & Admin
@@ -179,12 +179,64 @@ class TransactionController extends Controller
         return redirect()->route('transactions.index')->with('success', 'Transaction updated successfully.');
     }
 
-    public function destroy(Transaction $transaction)
+    public function destroy($id)
     {
+        $transaction = Transaction::withTrashed()->find($id);
+
+        if (!$transaction) {
+            return redirect()->route('transactions.index')
+                ->with('error', 'Data tidak ditemukan.');
+        }
+
+        if ($transaction->trashed()) {
+            $transaction->forceDelete();
+            return redirect()->route('transactions.history')
+                ->with('success', 'Transaction permanently deleted.');
+        }
+
         $transaction->delete();
         return redirect()->route('transactions.index')
-            ->with('success', 'Transaction deleted successfully.');
+            ->with('success', 'Transaction moved to history.');
     }
+
+
+
+
+    public function history()
+    {
+        $transactions = Transaction::onlyTrashed()
+            ->with(['type', 'category', 'subCategory'])
+            ->latest()
+            ->paginate(8);
+
+        return view('transactions.history', compact('transactions'));
+    }
+
+    public function restore($id)
+    {
+        $transaction = Transaction::onlyTrashed()->findOrFail($id);
+        $transaction->restore();
+
+        return redirect()->route('transactions.history')
+            ->with('success', 'Transaction restored successfully.');
+    }
+
+    public function forceDelete($id)
+    {
+        $transaction = Transaction::withTrashed()->find($id);
+
+        if (!$transaction) {
+            return redirect()->route('transactions.history')
+                ->with('error', 'Data tidak ditemukan.');
+        }
+
+        $transaction->forceDelete();
+
+        return redirect()->route('transactions.history')
+            ->with('success', 'Transaction permanently deleted.');
+    }
+
+
 
 
 }

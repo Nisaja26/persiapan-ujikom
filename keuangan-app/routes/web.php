@@ -68,7 +68,8 @@ Route::middleware('auth')->group(function () {
 
 });
 
-Route::get('/get-subcategories/{id}', 
+Route::get(
+    '/get-subcategories/{id}',
     [SubCategoryController::class, 'getByCategory']
 );
 
@@ -78,6 +79,20 @@ Route::get('/get-subcategories/{id}',
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'admin'])->group(function () {
+
+  // 🔥 TARUH CUSTOM ROUTE DI ATAS RESOURCE
+    Route::prefix('transactions')->group(function () {
+
+        Route::get('/history', [TransactionController::class, 'history'])
+            ->name('transactions.history');
+
+        Route::patch('/{id}/restore', [TransactionController::class, 'restore'])
+            ->name('transactions.restore');
+
+        Route::delete('/{id}/force-delete', [TransactionController::class, 'forceDelete'])
+            ->name('transactions.forceDelete');
+    });
+    
     Route::resource('transactions', TransactionController::class);
 });
 
@@ -134,6 +149,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
     Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('roles.destroy');
 });
+
+
 
 /*
 |--------------------------------------------------------------------------
