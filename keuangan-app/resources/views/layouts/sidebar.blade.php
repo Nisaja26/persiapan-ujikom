@@ -85,6 +85,14 @@
         <i class="fas fa-exchange-alt text-success"></i>
         <span class="menu-text">Daftar Transaksi</span>
       </a>
+
+     
+    <li class="nav-item {{ request()->is('transactions.history') ? 'active' : '' }}">
+      <a class="nav-link" href="{{ route('transactions.history') }}">
+        <i class="fas fa-history mr-2 text-warning"></i>
+        <span class="menu-text">History Delete</span>
+      </a>
+
     </li>
     <hr class="sidebar-divider">
   @endif
@@ -135,21 +143,21 @@
 
           </div>
 
-         
+
           {{-- HISTORY --}}
           <a class="collapse-item d-flex align-items-center justify-content-between 
-   {{ request()->routeIs('transactions.history') ? 'active font-weight-bold text-primary' : '' }}"
-   href="{{ route('transactions.history') }}">
+     {{ request()->routeIs('transactions.history') ? 'active font-weight-bold text-primary' : '' }}"
+            href="{{ route('transactions.history') }}">
 
-    <span>
-        <i class="fas fa-history mr-2 text-warning"></i>
-        History delete
-    </span>
+            <span>
+              <i class="fas fa-history mr-2 text-warning"></i>
+              History delete
+            </span>
 
-    <span class="badge badge-danger badge-pill">
-        {{ \App\Models\Transaction::onlyTrashed()->count() }}
-    </span>
-</a>
+            <span class="badge badge-danger badge-pill">
+              {{ \App\Models\Transaction::onlyTrashed()->count() }}
+            </span>
+          </a>
 
 
           {{-- PROFIL --}}

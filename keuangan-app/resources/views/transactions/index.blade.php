@@ -142,7 +142,7 @@
                         <!-- karena type tidak di kenal/null -->
                         {{ $trx->type->name ?? '-' }}
                       </span>
-                    @endif
+                  @endif
                   </td>
                   <!-- jika category kosong, maka akan tampil - -->
                   <td>{{ $trx->category->name ?? '-' }}</td>

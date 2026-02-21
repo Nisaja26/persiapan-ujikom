@@ -111,41 +111,35 @@ class TransactionController extends Controller
     // terima isi dari form
     public function store(Request $request)
     {
-        // validasi data
-        $request->validate([
-            // wajib di isi 'required'
+        // 1️⃣ Validasi dan simpan ke variable
+        $validated = $request->validate([
             'type_id' => 'required|exists:types,id',
             'category_id' => 'required|exists:categories,id',
             'sub_category_id' => 'nullable|exists:sub_categories,id',
-            // di isi oleh nomor
             'amount' => 'required|numeric',
-            // boleh tidak di isi 
+             'tanggal' => 'required|date',
             'deskripsi' => 'nullable|string',
         ]);
-        // kalau error redirect ke error massage
 
-        // Simpan transaksi baru
-        $transaction = Transaction::create($request->all());
+        // 2️⃣ Tambahkan user_id otomatis dari user login
+       $validated['user_id'] = auth()->user()->id;
 
+        // 3️⃣ Simpan transaksi (HANYA SEKALI)
+        $transaction = Transaction::create($validated);
 
-        // 🔔 Kirim notifikasi ke CEO & Admin
+        // 4️⃣ Kirim notifikasi ke CEO & Admin
         $users = User::whereHas('role', function ($q) {
             $q->whereIn('name', ['CEO', 'Admin']);
         })->get();
 
-
-        // cari user yang rolenya di daftarkan disini
-
-        // Ulangi proses ini untuk SETIAP user yang ditemukan
         foreach ($users as $user) {
-            // kirim notifikasi 
-            $user->notify(new TransactionNotification($transaction)); //catatan Nanti pakai queue biar bisa delay
+            $user->notify(new TransactionNotification($transaction));
         }
 
-        // jika sudah lolos validasi akan kembali ke halaman index dan muncul notif succes
-        return redirect()->route('transactions.index')->with('success', 'Transaction created successfully.');
+        return redirect()
+            ->route('transactions.index')
+            ->with('success', 'Transaction created successfully.');
     }
-
     public function show(Transaction $transaction)
     {
         // Tandai notifikasi sebagai sudah dibaca kalau ada notif_id
@@ -205,11 +199,13 @@ class TransactionController extends Controller
     public function history()
     {
         $transactions = Transaction::onlyTrashed()
-            ->with(['type', 'category', 'subCategory'])
+            ->with(['type', 'category', 'subCategory', 'user']) // tambahkan user
             ->latest()
             ->paginate(8);
 
         return view('transactions.history', compact('transactions'));
+
+        
     }
 
     public function restore($id)

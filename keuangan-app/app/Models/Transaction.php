@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\User;
 
 class Transaction extends Model
 {
@@ -17,10 +18,11 @@ class Transaction extends Model
         'sub_category_id',
         'amount',
         'tanggal',
-        'deskripsi'
+        'deskripsi',
+        'user_id'
     ];
 
-     protected $casts = [
+    protected $casts = [
         'tanggal' => 'date', // otomatis jadi Carbon instance
     ];
 
@@ -42,4 +44,10 @@ class Transaction extends Model
     {
         return $this->belongsTo(SubCategory::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(\App\Models\User::class);
+    }
+
 }

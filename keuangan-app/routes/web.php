@@ -61,7 +61,7 @@ Route::middleware('auth')->group(function () {
 | Master Data
 |--------------------------------------------------------------------------
 */
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('types', TypeController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('sub-categories', SubCategoryController::class);
@@ -78,7 +78,7 @@ Route::get(
 | Transactions (Admin Only)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'admin'])->group(function () {
+Route::middleware(['auth',])->group(function () {
 
   // 🔥 TARUH CUSTOM ROUTE DI ATAS RESOURCE
     Route::prefix('transactions')->group(function () {
