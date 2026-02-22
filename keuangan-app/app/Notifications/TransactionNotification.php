@@ -41,7 +41,7 @@ class TransactionNotification extends Notification
             // Fungsi number_format digunakan untuk memformat angka menjadi format Rupiah
             // (??) jika user tidak ada, maka ditampilkan 'Admin'
 
-            'url'     => url('/transactions/' . $this->transaction->id),
+            'url' => route('transactions.show', $this->transaction->id),
             // URL yang mengarah ke detail transaksi di aplikasi
         ];
     }

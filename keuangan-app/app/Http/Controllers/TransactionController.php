@@ -140,6 +140,8 @@ class TransactionController extends Controller
             ->route('transactions.index')
             ->with('success', 'Transaction created successfully.');
     }
+
+    // fitur notifikasi
     public function show(Transaction $transaction)
     {
         // Tandai notifikasi sebagai sudah dibaca kalau ada notif_id
@@ -193,9 +195,7 @@ class TransactionController extends Controller
             ->with('success', 'Transaction moved to history.');
     }
 
-
-
-
+// fitur history
     public function history()
     {
         $transactions = Transaction::onlyTrashed()
