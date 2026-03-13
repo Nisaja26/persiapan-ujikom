@@ -10,6 +10,11 @@ return new class extends Migration {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
 
+            // relasi ke tabel users
+            $table->foreignId('user_id')
+          ->constrained()
+          ->onDelete('cascade');
+
             // relasi ke tabel types
             $table->foreignId('type_id')
                 ->constrained('types')
