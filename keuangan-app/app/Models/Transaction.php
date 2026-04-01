@@ -13,13 +13,13 @@ class Transaction extends Model
 
     protected $fillable = [
         // nama-nama kolom yang di daftarkan sehingga bisa di simpan ke tabel
-        'type_id',
-        'category_id',
-        'sub_category_id',
-        'amount',
-        'tanggal',
-        'deskripsi',
-        'user_id'
+    'user_id', 
+    'type_id',
+    'category_id',
+    'sub_category_id',
+    'amount',
+    'tanggal',
+    'deskripsi'
     ];
 
     protected $casts = [
@@ -45,9 +45,14 @@ class Transaction extends Model
         return $this->belongsTo(SubCategory::class);
     }
 
+    // public function user()
+    // {
+    //     return $this->belongsTo(\App\Models\User::class);
+    // }
+
     public function user()
     {
-        return $this->belongsTo(\App\Models\User::class);
+        return $this->belongsTo(User::class);
     }
 
 }

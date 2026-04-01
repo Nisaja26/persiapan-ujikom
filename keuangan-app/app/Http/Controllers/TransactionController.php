@@ -9,13 +9,14 @@ use App\Models\SubCategory;
 use App\Models\User;
 use App\Notifications\TransactionNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TransactionController extends Controller
 {
     public function index()
     {
         //tampilkan data dengan relasi urutkan dta terbaru 
-        $query = Transaction::with(['type', 'category', 'subCategory'])->latest();
+        $query = Transaction::with(['user', 'type', 'category', 'subCategory'])->latest();
 
         // $histories = TransactionHistory::where('transaction_id', $id)
         // ->orderBy('created_at', 'desc')
@@ -77,6 +78,8 @@ class TransactionController extends Controller
 
         $role = auth()->user()->role->name;
 
+        $transactions = Transaction::with('user')->latest()->get();
+
 
         // 🔹 Tambahkan ini — ambil data untuk dropdown filter
         $types = Type::all();
@@ -117,7 +120,7 @@ class TransactionController extends Controller
             'category_id' => 'required|exists:categories,id',
             'sub_category_id' => 'nullable|exists:sub_categories,id',
             'amount' => 'required|numeric',
-             'tanggal' => 'required|date',
+            'tanggal' => 'required|date',
             'deskripsi' => 'nullable|string',
         ]);
 

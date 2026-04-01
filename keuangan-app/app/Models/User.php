@@ -32,6 +32,11 @@ class User extends Authenticatable
         return 'username';
     }
 
+    public function getDisplayNameAttribute()
+    {
+        return $this->name ?? $this->username;
+    }
+
     /**
      * Relasi ke tabel roles
      */
@@ -46,6 +51,10 @@ class User extends Authenticatable
         return $this->role ? ucfirst($this->role->name) : '-';
     }
 
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
 
 
     /**

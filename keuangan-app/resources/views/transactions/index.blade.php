@@ -105,6 +105,7 @@
             <thead class="thead-light">
               <tr>
                 <th>No</th>
+                <th>Nama</th>
                 <th>Tipe</th>
                 <th>Periode</th>
                 <th>Jenis</th>
@@ -121,6 +122,8 @@
                 <tr>
                   <!-- nomor berurutan di pagnation, jika next halaman no data tetap berurutan tidak kembali 1 -->
                   <td>{{ $transactions->firstItem() + $index }}</td>
+                  <td>{{ $trx->user->display_name }}</td>
+
                   <td>
                     <!-- jika type namenya pemasukan  -->
                     @if($trx->type->name == 'Pemasukan')
@@ -142,8 +145,9 @@
                         <!-- karena type tidak di kenal/null -->
                         {{ $trx->type->name ?? '-' }}
                       </span>
-                  @endif
+                    @endif
                   </td>
+
                   <!-- jika category kosong, maka akan tampil - -->
                   <td>{{ $trx->category->name ?? '-' }}</td>
                   <td>{{ $trx->subCategory->name ?? '-' }}</td>
